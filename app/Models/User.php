@@ -3,6 +3,7 @@
 namespace App\Models;
 
 // use Illuminate\Contracts\Auth\MustVerifyEmail;
+use App\Enums\RolesEnum;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
 use Illuminate\Database\Eloquent\Relations\HasMany;
@@ -52,7 +53,7 @@ class User extends Authenticatable
         return $this->belongsTo(User::class, 'manager_id');
     }
 
-    public function subordinates(): HasMany
+    public function employees(): HasMany
     {
         return $this->hasMany(User::class, 'manager_id');
     }
@@ -65,5 +66,10 @@ class User extends Authenticatable
     public function tasks(): HasMany
     {
         return $this->hasMany(Task::class, 'employee_id');
+    }
+
+    public function isAdmin(): bool
+    {
+        return $this->role == RolesEnum::ADMIN->value;
     }
 }

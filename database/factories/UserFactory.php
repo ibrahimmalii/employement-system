@@ -32,7 +32,7 @@ class UserFactory extends Factory
             'role' => $this->faker->randomElement([1, 2]),
             'image' => null,
             'email_verified_at' => now(),
-            'password' => Hash::make('password'),
+            'password' => Hash::make('a801B997C607328'),
             'remember_token' => Str::random(10),
         ];
     }

@@ -14,10 +14,12 @@
                             </div>
                         @endif
                             <h1>Departments</h1>
-                            <a class="btn btn-primary" href="{{ route('departments.create') }}">Add new departments</a>
+                            @if(auth()->user()->isAdmin())
+                                <a class="btn btn-primary" href="{{ route('departments.create') }}">Add new departments</a>
+                            @endif
                             <form class="mt-3" action="{{ route('departments.search') }}" method="get">
                                 <div class="input-group">
-                                    <input class="form-control" type="text" name="query" value="{{ old('query') }}">
+                                    <input class="form-control" type="text" name="query" value="{{ $query ?? '' }}">
                                     <button class="btn btn-success" type="submit">Search</button>
                                 </div>
                             </form>
@@ -39,7 +41,9 @@
                                         <th>Name</th>
                                         <th>Employees Count</th>
                                         <th>Total salary</th>
-                                        <th>Actions</th>
+                                        @if(auth()->user()->isAdmin())
+                                            <th>Actions</th>
+                                        @endif
                                     </tr>
                                 </thead>
                                 <tbody>
@@ -49,14 +53,16 @@
                                             <td>{{ $department->name }}</td>
                                             <td>{{ $department->employees_count }}</td>
                                             <td>{{ $department->employees->sum('salary') }}</td>
-                                            <td>
-                                                <form action="{{ route('departments.destroy', $department->id) }}" method="post">
-                                                    @csrf
-                                                    @method('delete')
-                                                    <a class="btn btn-secondary" href="{{ route('departments.edit', $department->id) }}">Edit</a>
-                                                    <button class="btn btn-danger" type="submit">Delete</button>
-                                                </form>
-                                            </td>
+                                            @if(auth()->user()->isAdmin())
+                                                <td>
+                                                    <form action="{{ route('departments.destroy', $department->id) }}" method="post">
+                                                        @csrf
+                                                        @method('delete')
+                                                        <a class="btn btn-secondary" href="{{ route('departments.edit', $department->id) }}">Edit</a>
+                                                        <button class="btn btn-danger" type="submit">Delete</button>
+                                                    </form>
+                                                </td>
+                                            @endif
                                         </tr>
                                     @endforeach
                                 </tbody>

@@ -77,7 +77,7 @@
                                 @error('image')
                                 <strong class="text-danger">{{ $message }}</strong>
                                 @enderror
-                                <input class="form-control" type="file" name="image">
+                                <input class="form-control" value="{{ old('image') }}" type="file" name="image" accept="image/*">
                             </div>
 
                             <div class="input-group d-flex mt-3">
@@ -94,7 +94,7 @@
 
                             </div>
 
-                            <button class="btn btn-primary mt-3" type="submit">Create User</button>
+                            <button class="btn btn-primary mt-3" type="submit">create employee</button>
                         </form>
                     </div>
                 </div>

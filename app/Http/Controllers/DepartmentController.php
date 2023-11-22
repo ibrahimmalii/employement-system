@@ -10,6 +10,11 @@ use Illuminate\View\View;
 
 class DepartmentController extends Controller
 {
+    public function __construct()
+    {
+        $this->middleware('is_admin')->only(['create', 'store', 'edit', 'update', 'destroy']);
+    }
+
     public function index(): View
     {
         $departments = Department::withCount('employees')->latest()->paginate(10);

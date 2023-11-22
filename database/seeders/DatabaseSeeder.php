@@ -2,7 +2,6 @@
 
 namespace Database\Seeders;
 
-// use Illuminate\Database\Console\Seeds\WithoutModelEvents;
 use App\Enums\RolesEnum;
 use App\Models\Department;
 use App\Models\User;
@@ -26,12 +25,12 @@ class DatabaseSeeder extends Seeder
             'last_name' => 'Ali',
             'email' => 'admin@admin.com',
             'phone' => '01096121030',
-            'department_id' => Department::all()->random()->id,
+            'department_id' => Department::pluck('id')->random(),
             'role' => RolesEnum::ADMIN,
         ]);
 
          User::factory(10)->create([
-             'department_id' => Department::all()->random()->id,
+             'department_id' => Department::pluck('id')->random(),
              'manager_id' => 1,
              'role' => RolesEnum::EMPLOYEE,
          ]);

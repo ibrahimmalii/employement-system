@@ -7,6 +7,7 @@ use App\Http\Requests\StoreUserRequest;
 use App\Http\Requests\UpdateUserRequest;
 use App\Models\Department;
 use App\Models\User;
+use Barryvdh\Debugbar\Facades\Debugbar;
 use Couchbase\Role;
 use Illuminate\Contracts\View\View;
 use Illuminate\Foundation\Application;
@@ -16,9 +17,15 @@ use Illuminate\Routing\Redirector;
 
 class UserController extends Controller
 {
-    public function index()
+
+    public function __construct()
     {
-        $users = User::with('department')->latest()->paginate(5);
+        $this->middleware('is_admin')->only(['create', 'store', 'edit', 'update', 'destroy']);
+    }
+
+    public function index(): View
+    {
+        $users = User::with(['department', 'manager'])->latest()->paginate(5);
         return view('users.index', compact('users'));
     }
 
@@ -36,7 +43,9 @@ class UserController extends Controller
             $validatedUser['image'] = $request->file('image')->store('images', 'public');
         }
 
-        auth()->user()->create($validatedUser);
+        $validatedUser['manager_id'] = auth()->id();
+        User::create($validatedUser);
+
         return redirect()->route('users.index')->with('success', 'User created successfully.');
     }
 
@@ -60,9 +69,24 @@ class UserController extends Controller
         return redirect()->route('users.index')->with('success', 'User updated successfully');
     }
 
-    public function search()
+    public function search(Request $request): View|Application|RedirectResponse|Redirector
     {
+        $query = $request->input('query');
 
+        if(!$query) {
+            return redirect()->route('users.index');
+        }
+
+        $users = User::with(['department', 'manager'])
+            ->where('first_name', 'like', '%' . $query . '%')
+            ->orWhere('last_name', 'like', '%' . $query . '%')
+            ->orWhere('email', 'like', '%' . $query . '%')
+            ->orWhere('phone', 'like', '%' . $query . '%')
+            ->orWhere('salary', 'like', '%' . $query . '%')
+            ->orWhereHas('department', fn ($q) => $q->where('name', 'like', '%' . $query . '%'))
+            ->latest()->paginate(5);
+
+        return view('users.index', compact('users', 'query'));
     }
 
     public function destroy(User $user): Redirector|Application|RedirectResponse

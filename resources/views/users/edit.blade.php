@@ -73,12 +73,16 @@
                                 </label>
                             </div>
 
-                            <div>
-                                <label class="flex-grow-1" for="image">Image:</label>
+                            <div class="text-center">
+                                <img alt="employee_img"
+                                     onclick="imgInput.click()" class="mb-3"
+                                     style="border-radius: 50%; width: 120px; height: 120px"
+                                     src="{{ asset($user->image ? 'storage/' . $user->image : 'storage/images/default.png') }}"
+                                >
                                 @error('image')
                                 <strong class="text-danger">{{ $message }}</strong>
                                 @enderror
-                                <input class="form-control" type="file" name="image">
+                                <input id="imgInput" class="form-control d-none" value="{{ $user->image }}" type="file" name="image">
                             </div>
 
                             <div class="input-group d-flex mt-3">
@@ -95,7 +99,7 @@
 
                             </div>
 
-                            <button class="btn btn-primary mt-3" type="submit">Create User</button>
+                            <button class="btn btn-primary mt-3" type="submit">update employee</button>
                         </form>
                     </div>
                 </div>

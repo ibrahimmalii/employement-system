@@ -17,12 +17,14 @@ use Illuminate\Support\Facades\Route;
 */
 
 Route::get('/', function () {
-    return view('welcome');
-})->name('welcome');
-
+    return view('auth.login');
+})->name('welcome')->middleware('guest');
 Auth::routes();
 
 Route::middleware('auth')->group(function() {
+    Route::get('users/search', [UserController::class, 'search'])
+        ->name('users.search');
+
     Route::resource('users', UserController::class)
         ->only(['index', 'create', 'store', 'edit', 'update', 'search', 'destroy']);
 
