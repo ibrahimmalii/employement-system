@@ -33,12 +33,14 @@ class StoreUserRequest extends FormRequest
             'salary' => 'required|numeric',
             'department_id' => 'required|exists:departments,id',
             'image' => 'nullable|image|mimes:jpeg,png,jpg,gif,svg|max:2048',
-            'password' => ['required', 'min:6', 'confirmed', Password::defaults()],
+            'password' => ['required', 'min:6', 'confirmed', Password::defaults(), 'regex:/[a-z]/', 'regex:/[A-Z]/', 'regex:/[0-9]/', 'regex:/[@$!%*#?&_]/'],
         ];
     }
 
-    protected function prepareForValidation()
+    public function messages(): array
     {
-//        dd($this->request);
+        return [
+            'password.regex' => 'Password must contain at least one uppercase letter, one lowercase letter, one number and one special character.',
+        ];
     }
 }

@@ -46,4 +46,11 @@ Then go to the browser and type the following url.
 http://localhost/
 ```
 
+Login with the following credentials.
+
+```
+email: admin@admin.com
+password: a801B997C607328
+```
+
 NOW YOU CAN USE THE APPLICATION. :)
